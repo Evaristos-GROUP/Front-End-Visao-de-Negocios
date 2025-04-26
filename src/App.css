@@ -1,0 +1,14 @@
+#id_app {
+  height: auto;
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-items: normal;
+  background: linear-gradient(
+    to bottom,
+    var(--bgk-black-100),
+    var(--bgk-black-95)
+  );
+}
