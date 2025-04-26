@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 import { RootState } from "../../store";
 
 interface Props {
-  item: any; // O item pode ser qualquer modelo, dependendo do tipo.
+  item: any; 
   showModal: () => void;
 }
 
@@ -76,8 +76,8 @@ const ShowDescriptionM: React.FC<Props> = ({ item, showModal }) => {
           {showOptions && (
             <main>
               {stateInfoGerais.infosGerais!.sub_contas.map((value, index) => (
-                <span key={index} onClick={() => { setSubConta(value); setShowOptions(false); }}>
-                  {value}
+                <span key={index} onClick={() => { setSubConta(value.nome); setShowOptions(false); }}>
+                  {value.nome}
                 </span>
               ))}
             </main>
@@ -111,7 +111,7 @@ const ShowDescriptionM: React.FC<Props> = ({ item, showModal }) => {
         <h2>Edição</h2>
         {getFormFields()}
         <div>
-          <button type="button" onClick={handleEdit} disabled={value <= 0 || name.trim() === ""}>
+          <button type="button" onClick={handleEdit} disabled={value <= 0 }>
             Concluir
           </button>
           <button onClick={showModal}>Cancelar</button>

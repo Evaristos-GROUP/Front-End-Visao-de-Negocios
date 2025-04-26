@@ -5,10 +5,16 @@ import { FcDoughnutChart, FcRatings, FcTodoList, FcAddDatabase } from "react-ico
 import SidebarItem from "./SidebarItem";
 import { Link } from "react-router-dom";
 import { IoIosArrowForward } from "react-icons/io";
+import { RootState } from "../../store";
+import { useSelector } from "react-redux";
 
 const SidebarC: React.FC = (): React.ReactElement => {
 
   const [minimize, setMinimize] = React.useState<boolean>(false);
+  const userPermission = localStorage.getItem("user").split("|")[2].trim();
+  const infoGerais = useSelector(
+    (state: RootState) => state.infosGeraisStore.infosGerais
+  );
 
   return (
     <ContainerSidebarCS >
@@ -18,7 +24,7 @@ const SidebarC: React.FC = (): React.ReactElement => {
 
         <BoxEmpresa>
           <img src={LogoEmpresas} alt="Logo Empresa" />
-          <p>Amor Saúde M'boi Mirim</p>
+          <p>{infoGerais?.nome}</p>
         </BoxEmpresa>
 
         <BoxItemContent>
@@ -32,9 +38,13 @@ const SidebarC: React.FC = (): React.ReactElement => {
           options={[
             { url: "/relatorios/DRE", value: "DRE" },
             { url: "/relatorios/margem-lucro", value: "Margem de lucro" },
-            { url: "/relatorios/retiradas-aporte", value: "Retiradas x Aporte" },
             { url: "/relatorios/recebiveis-vendas", value: "Recebíveis x Vendas x Despesas" },
             { url: "/relatorios/mensal", value: "Mensal" },
+
+            ...(userPermission === "SOCIO" || userPermission === "ADMIN" 
+              ? [{ url: "/relatorios/retiradas-aporte", value: "Retiradas x Aporte" },
+              ]
+              : []),
           ]}
         />
 
@@ -47,11 +57,16 @@ const SidebarC: React.FC = (): React.ReactElement => {
         <SidebarItem
           icon={<FcAddDatabase />}
           title="Cadastros"
-          options={[
-            { url: "/cadastros/usuarios", value: "Usuários" },
-            { url: "/cadastros/sub-contas", value: "Sub-contas" },
-            { url: "/cadastros/fontes-arrecadacao", value: "Fontes de arrecadação" },
-          ]} />
+          options={
+            [
+              ...(userPermission === "GERENTE" || userPermission === "ADMIN"
+                ? [{ url: "/cadastros/usuarios", value: "Usuários" }]
+                : []),
+              { url: "/cadastros/sub-contas", value: "Sub-contas" },
+              { url: "/cadastros/fontes-arrecadacao", value: "Fontes de arrecadação" },
+            ]
+          }
+        />
 
       </BoxSidebarCS>
     </ContainerSidebarCS>

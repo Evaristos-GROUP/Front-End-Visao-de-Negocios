@@ -77,7 +77,7 @@ export const ContainerShowDescriptionMS = styled.div<ContainerShowDescriptionMS>
       display: ${(props) => (props.showOptions ? "flex" : "none")};
       flex-direction: column;
       overflow-y: scroll !important;
-      top: 225px;
+      top: 185px;
       height: 210px;
       background-color: white;
       border: 2px solid var(--hightlight-color-01);
@@ -86,6 +86,7 @@ export const ContainerShowDescriptionMS = styled.div<ContainerShowDescriptionMS>
       border-radius: var(--border-radius-02);
       z-index: 1000;
       padding: 10px;
+      background-color: #f1f1f1;
 
       &::-webkit-scrollbar {
         width: 3px;

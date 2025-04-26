@@ -31,7 +31,8 @@ class SubContaSE {
     try {
       const response = await axiosInstance.patch<ApiDefaultResponse>(
         `api/empresas/subConta/update`,
-        subConta
+     {   novaSubConta: subConta.novaSubConta,
+        subContaExistente: subConta.subContaExistente}
       );
       return response.data;
     } catch (error: any) {
@@ -52,7 +53,7 @@ class SubContaSE {
     try {
       const response = await axiosInstance.patch<ApiDefaultResponse>(
         `api/empresas/subConta/delete`,
-        subConta
+        {subConta: subConta.subConta}
       );
       return response.data;
     } catch (error: any) {

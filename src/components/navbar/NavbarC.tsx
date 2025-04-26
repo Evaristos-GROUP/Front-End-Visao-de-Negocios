@@ -28,20 +28,35 @@ const NavbarC: React.FC = (): React.ReactElement => {
   return (
     <ContainerNavbarCS keyNav={showUserOptions}>
       <ul>
-        <li>
+        <li style={{ width: "70px" }}>
           <span>
             <FcSms />
           </span>
         </li>
 
-        <li>
+        <li style={{ width: "70px" }}>
           <span>{nome.trim().charAt(0).toUpperCase()}</span>
         </li>
 
         <li onClick={() => setShowUserOptions(!showUserOptions)}>
           <span>
-            <p>{nome}</p> <IoMdArrowDropright />
+            <div>
+              <p>
+                {(() => {
+                  const partes = nome.split("  ");
+                  if (partes.length >= 2) {
+                    return `${partes[0]} ${partes[1]}`;
+                  } else {
+                    return partes[0];
+                  }
+                })()}
+              </p>
+
+              <p style={{ fontSize: "12px" , textTransform:"lowercase"}}>{email}</p>
+            </div>
+
           </span>
+
         </li>
 
         <BoxoptionsCS keyNav={showUserOptions}>

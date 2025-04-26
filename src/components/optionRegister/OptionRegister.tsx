@@ -18,7 +18,7 @@ const OptionRegisterC: React.FC<propsOptionRegisterC> = (
       props.setIndex(index);
     } else if (typeof index === "string" && index === "DEFAULT") {
       props.setIndex(0); // INDEX DEFAULT DO OPTION PARA QUE A TABELA POSSA RENDERIZAR
-      setValueSelected("RECEBÍVEIS"); // VALOR DEFAULT DO SELECT
+      setValueSelected("RECEBIVEIS"); // VALOR DEFAULT DO SELECT
     }
     return "";
   };

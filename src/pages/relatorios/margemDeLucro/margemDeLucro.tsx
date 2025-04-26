@@ -22,7 +22,7 @@ const MargemDeLucroC = () => {
       const [mes, ano] = mesSelecionado.split("/").map(Number);
       dispatch(getAllServico({ mes, ano }));
     }
-  }, [mesSelecionado]);
+  }, [mesSelecionado, dispatch]);
 
   return (
     <MargemDeLucroContainer>
@@ -39,12 +39,11 @@ const MargemDeLucroC = () => {
           </option>
 
           {margemState?.periodosDisponiveis
-            .slice()
+            ?.slice()
             .sort((a, b) => {
               const [mesA, anoA] = a.split("/").map(Number);
               const [mesB, anoB] = b.split("/").map(Number);
-
-              return anoA === anoB ?  mesB - mesA : anoB - anoA;
+              return anoA === anoB ? mesB - mesA : anoB - anoA;
             })
             .map((mes, index) => (
               <option key={index} value={mes}>

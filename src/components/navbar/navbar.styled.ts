@@ -33,7 +33,7 @@ export const ContainerNavbarCS = styled.nav<propsNavbar>`
 
     li {
       height: 70%;
-      width: 70px;
+      width: 150px;
       display: flex;
       margin-left: 5px;
 
@@ -41,9 +41,14 @@ export const ContainerNavbarCS = styled.nav<propsNavbar>`
         height: 100%;
         width: 120%;
         display: flex;
-
+    
         align-items: center;
         justify-content: center;
+
+        & div{
+          display: flex;
+          flex-direction: column;
+        }
 
         svg {
           font-size: 20px;

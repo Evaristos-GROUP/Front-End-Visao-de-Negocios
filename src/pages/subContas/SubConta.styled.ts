@@ -51,6 +51,7 @@ export const ContainerSubContasCS = styled.div`
           border: 1px solid var(--grey-line-02);
           border-bottom: none;
           font-size: 13px;
+      
         }
       }
     }
@@ -58,8 +59,10 @@ export const ContainerSubContasCS = styled.div`
     td {
       padding: 10px;
       text-align: center;
+      vertical-align: middle;
       font-size: 12px;
       text-transform: capitalize;
+      & p{}
     }
 
     th {

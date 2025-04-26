@@ -27,7 +27,7 @@ export const ContainerOptionRegisterCS = styled.main<propsContainerOptionRegiste
     cursor: default;
     background: ${(props) => {
       switch (props.value) {
-        case "RECEBÍVEIS":
+        case "RECEBIVEIS":
           return "linear-gradient(to right, #2eff43, transparent 70%)";
         case "DESPESAS":
           return "linear-gradient(to right, #FF3939, transparent 70%)";

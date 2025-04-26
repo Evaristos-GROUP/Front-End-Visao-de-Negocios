@@ -8,7 +8,7 @@ import TipoServicoSE from "../../services/TipoServicoSE";
 
 const initialState: MargemDeLucroStates = {
   MargemDeLucro: null,
-  error_MargemDeLucro: false,
+  error_MargemDeLucro: "",
   success_MargemDeLucro: false,
   loading_MargemDeLucro: false,
 };
@@ -22,7 +22,7 @@ export const getAllServico = createAsyncThunk(
       return thunkAPI.rejectWithValue(response.message);
     }
 
-    return response.data[0] as unknown as MargemDeLucroModel;
+    return response.data[0] as MargemDeLucroModel;
   }
 );
 
@@ -34,14 +34,12 @@ export const newServico = createAsyncThunk(
       tipoProcedimento: servico.tipo,
       date: servico.date,
     });
+    
     if (response.http_status_code !== 200) {
       return thunkAPI.rejectWithValue(response.message);
     }
-    thunkAPI.dispatch(getAllServico());
 
-    if (response.http_status_code === 200) {
-      return thunkAPI.fulfillWithValue(response.message);
-    }
+    return thunkAPI.fulfillWithValue(response.message); 
   }
 );
 
@@ -52,7 +50,7 @@ export const updateServico = createAsyncThunk(
     if (response.http_status_code !== 200) {
       return thunkAPI.rejectWithValue(response.message);
     }
-    return response.data as unknown as MargemDeLucroModel;
+    return response.message;
   }
 );
 
@@ -63,6 +61,7 @@ export const deleteServico = createAsyncThunk(
     if (response.http_status_code !== 200) {
       return thunkAPI.rejectWithValue(response.message);
     }
+    return response.message; // mesmo esquema
   }
 );
 
@@ -71,13 +70,17 @@ export const MargemDeLucroSL = createSlice({
   initialState,
   reducers: {
     resetStatesMargemDeLucro: (state) => {
-      state.error_MargemDeLucro = false;
+      state.error_MargemDeLucro = "";
       state.success_MargemDeLucro = false;
       state.loading_MargemDeLucro = false;
     },
   },
   extraReducers: (builder) => {
     builder
+      // Buscar serviços
+      .addCase(getAllServico.pending, (state) => {
+        state.loading_MargemDeLucro = true;
+      })
       .addCase(getAllServico.fulfilled, (state, action) => {
         state.loading_MargemDeLucro = false;
         state.success_MargemDeLucro = true;
@@ -88,48 +91,53 @@ export const MargemDeLucroSL = createSlice({
         state.success_MargemDeLucro = false;
         state.error_MargemDeLucro = action.payload as string;
       })
+
+      // Criar novo serviço
       .addCase(newServico.pending, (state) => {
         state.loading_MargemDeLucro = true;
       })
       .addCase(newServico.fulfilled, (state, action) => {
         state.loading_MargemDeLucro = false;
-        state.error_MargemDeLucro = false;
-        state.success_MargemDeLucro = action.payload as string;
+        state.success_MargemDeLucro = true;
+        state.error_MargemDeLucro = "";
       })
       .addCase(newServico.rejected, (state, action) => {
         state.loading_MargemDeLucro = false;
-        console.log(action.payload);
+        state.success_MargemDeLucro = false;
         state.error_MargemDeLucro = action.payload as string;
       })
+
+      // Atualizar serviço
       .addCase(updateServico.pending, (state) => {
         state.loading_MargemDeLucro = true;
       })
-      .addCase(updateServico.fulfilled, (state, action) => {
+      .addCase(updateServico.fulfilled, (state) => {
         state.loading_MargemDeLucro = false;
         state.success_MargemDeLucro = true;
-        //    state.MargemDeLucro = state.MargemDeLucro.map((item) =>
-        //     item.nome === action.payload.nome ? action.payload : item
-        //    );
+        state.error_MargemDeLucro = "";
       })
       .addCase(updateServico.rejected, (state, action) => {
         state.loading_MargemDeLucro = false;
+        state.success_MargemDeLucro = false;
         state.error_MargemDeLucro = action.payload as string;
       })
+
+
       .addCase(deleteServico.pending, (state) => {
         state.loading_MargemDeLucro = true;
       })
-      .addCase(deleteServico.fulfilled, (state, action) => {
+      .addCase(deleteServico.fulfilled, (state) => {
         state.loading_MargemDeLucro = false;
         state.success_MargemDeLucro = true;
-        //  state.MargemDeLucro = state.MargemDeLucro.filter(
-        //     (item) => item.nome !== action.payload.nome
-        //);
+        state.error_MargemDeLucro = "";
       })
       .addCase(deleteServico.rejected, (state, action) => {
         state.loading_MargemDeLucro = false;
+        state.success_MargemDeLucro = false;
         state.error_MargemDeLucro = action.payload as string;
       });
   },
 });
+
 export const { resetStatesMargemDeLucro } = MargemDeLucroSL.actions;
 export default MargemDeLucroSL.reducer;

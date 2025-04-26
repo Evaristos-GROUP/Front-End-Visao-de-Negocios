@@ -54,7 +54,7 @@ export const BoxSidebarCS = styled.nav<prospsSidebar>`
   user-select: none;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 10px;
   display: ${(props) => props.minimize ? "none" : "block"};
   gap: 20px;
 
@@ -70,7 +70,7 @@ export const BoxSidebarCS = styled.nav<prospsSidebar>`
 
 export const BoxEmpresa = styled.div`
   display: flex;
-  height: 80px;
+  height: 90px;
   border-radius: var(--border-radius-01);
   background: linear-gradient(
     to right,
@@ -83,13 +83,13 @@ export const BoxEmpresa = styled.div`
   color: var(--white-100);
   justify-content: space-evenly;
   align-items: center;
-  font-size: 11px;
+  font-size: 14px;
   text-align: center;
   svg {
     font-size: 35px;
   }
   & img{
-    width: 50px;
+    width: 80px;
   }
 `;
 
@@ -189,7 +189,8 @@ export const BoxOptionsCS = styled.div<prospsSidebar>`
   padding: 5px 0;
   width: 100%;
   flex-direction: column;
-  align-items: end;
+  align-items: start;
+
   animation: ${(props) =>
     !props.keySide
       ? css`
@@ -200,32 +201,21 @@ export const BoxOptionsCS = styled.div<prospsSidebar>`
         `};
 
   & a {
-    border-left: 1px solid var(--text-color);
+
     width: 80%;
+  
     padding: 10px;
     color: var(--white-100);
     opacity: 0.8;
     position: relative;
     font-size: 13px;
 
-    &:before {
-      content: "";
-      position: absolute;
-      width: 5px;
-      height: 1px;
-      background-color: var(--text-color);
-      margin-top: 10px;
-      left: 0;
-    }
-
     &:hover {
       opacity: 1;
-      border-left: 1px solid var(--white-100);
+      border-color: white;
       cursor: pointer;
       background: var(--bgk-black-95);
-      &:before {
-        background-color: var(--white-100);
-      }
+  
     }
   }
 `;

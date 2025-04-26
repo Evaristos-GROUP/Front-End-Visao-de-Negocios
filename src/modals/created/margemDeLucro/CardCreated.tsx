@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Container } from "./cardmodal.styled";
 import { toast } from "react-toastify";
 import {
   newServico,
+  getAllServico,
   resetStatesMargemDeLucro,
 } from "../../../slices/Relatorios/MargemDeLucroSL";
 import { CustomTsDispatch } from "../../../hooks/dispatch";
 import { RootState } from "../../../store";
 import * as Redux from "react-redux";
 import { FaCheck } from "react-icons/fa";
+
 interface NovoServicoModalProps {
   onClose: () => void;
 }
@@ -17,7 +19,6 @@ const CardCreated: React.FC<NovoServicoModalProps> = ({ onClose }) => {
   const stateMargemDeLucro = Redux.useSelector(
     (state: RootState) => state.MargemDeLucroStore
   );
-
   const dispatch = CustomTsDispatch();
 
   const [nome, setNome] = useState("");
@@ -25,41 +26,87 @@ const CardCreated: React.FC<NovoServicoModalProps> = ({ onClose }) => {
   const [date, setDate] = useState("");
   const [showDate, setShowDate] = useState(false);
 
-  const handleSaveService = () => {
-    dispatch(resetStatesMargemDeLucro());
 
-    if (!nome || !tipo) {
-      toast.error("Preencha todos os campos!");
-      return;
-    }
 
-    dispatch(newServico({ nome, tipo, date }));
+const successRef = useRef(false);
+
+useEffect(() => {
+  successRef.current = false;
+
+  return () => {
+    successRef.current = false;
   };
+}, []);
 
-  React.useEffect(() => {
-    if (stateMargemDeLucro.success_MargemDeLucro) {
-      toast.success("Procedimento cadastrado com sucesso.");
+const [isSubmitting, setIsSubmitting] = useState(false);
+const toastIdRef = useRef<React.ReactText>();
 
-      setTimeout(() => {
-        dispatch(resetStatesMargemDeLucro());
-      }, 2000);
+useEffect(() => {
+  // Limpar toasts pendentes quando o modal fecha
+  return () => {
+    if (toastIdRef.current) {
+      toast.dismiss(toastIdRef.current);
     }
+  };
+}, []);
 
-    if (
-      typeof stateMargemDeLucro.error_MargemDeLucro === "string" &&
-      stateMargemDeLucro.error_MargemDeLucro !== ""
-    ) {
-      toast.error(stateMargemDeLucro.error_MargemDeLucro);
+useEffect(() => {
+  if (!isSubmitting) return;
 
-      setTimeout(() => {
-        dispatch(resetStatesMargemDeLucro());
-      }, 1000);
+  if (stateMargemDeLucro.success_MargemDeLucro) {
+    const handleSuccess = async () => {
+      setIsSubmitting(false);
+      
+      if (toastIdRef.current) {
+        toast.dismiss(toastIdRef.current);
+      }
+      
+      toastIdRef.current = toast.success("Procedimento cadastrado com sucesso!", {
+        autoClose: 2000,
+        onClose: () => {
+          const currentDate = new Date();
+          dispatch(getAllServico({
+            mes: currentDate.getMonth() + 1,
+            ano: currentDate.getFullYear()
+          })).finally(() => {
+            dispatch(resetStatesMargemDeLucro());
+            onClose();
+          });
+        }
+      });
+    };
+
+    handleSuccess();
+  }
+
+  if (stateMargemDeLucro.error_MargemDeLucro) {
+    setIsSubmitting(false);
+    
+    if (toastIdRef.current) {
+      toast.dismiss(toastIdRef.current);
     }
-  }, [
-    stateMargemDeLucro.success_MargemDeLucro,
-    stateMargemDeLucro.error_MargemDeLucro,
-    dispatch,
-  ]);
+    
+    toastIdRef.current = toast.error(
+      typeof stateMargemDeLucro.error_MargemDeLucro === 'string' 
+        ? stateMargemDeLucro.error_MargemDeLucro 
+        : 'Ocorreu um erro',
+      { autoClose: 5000 }
+    );
+    
+    dispatch(resetStatesMargemDeLucro());
+  }
+}, [stateMargemDeLucro, dispatch, onClose, isSubmitting]);
+
+const handleSaveService = () => {
+  if (!nome || !tipo) {
+    toast.error("Preencha todos os campos!");
+    return;
+  }
+
+  setIsSubmitting(true);
+  dispatch(newServico({ nome, tipo, date }));
+};
+
 
   return (
     <Container>
@@ -101,6 +148,7 @@ const CardCreated: React.FC<NovoServicoModalProps> = ({ onClose }) => {
               onChange={(e) => setDate(e.target.value)}
             />
           </div>
+
           {showDate && (
             <p>
               Ao selecionar um mês anterior, o procedimento será cadastrado para
@@ -109,7 +157,7 @@ const CardCreated: React.FC<NovoServicoModalProps> = ({ onClose }) => {
           )}
 
           <div className="Button">
-            <button type="button" onClick={() => handleSaveService()}>
+            <button type="button" onClick={handleSaveService}>
               Salvar
             </button>
             <button type="button" className="cancel-btn" onClick={onClose}>

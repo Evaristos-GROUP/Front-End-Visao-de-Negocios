@@ -8,40 +8,60 @@ import { patchInitCaixa, resetStatesCaixa } from "../../slices/CaixaSL";
 import { RootState } from "../../store";
 import { toast } from "react-toastify";
 
-const InitCaixa = (): React.ReactElement => {
-  const [value, setValue] = React.useState<number>(0);
+const InitCaixa = (): React.ReactElement | string => {
+  const [value, setValue] = React.useState<string>('');
+  const [showCaixa, setShowCaixa] = React.useState<boolean>(true);
   const dispatch = CustomTsDispatch();
 
   const statesCaixa = Redux.useSelector((state: RootState) => state.CaixaStore);
 
   const handleInitCaixa = () => {
-    dispatch(patchInitCaixa(value));
+    dispatch(patchInitCaixa(Number(value.replace(/\D/g, "")) / 100));
   };
 
   React.useEffect(() => {
     if (statesCaixa.success_caixa) {
       toast.success("Caixa iniciado com sucesso.");
-
+      setShowCaixa(false);
       setTimeout(() => {
+        setShowCaixa(false);
         dispatch(resetStatesCaixa());
       }, 3000);
-    } 
+    }
   }, [statesCaixa.success_caixa]);
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value.replace(/\D/g, "");
+    const num = Number(raw) / 100;
+
+    const formatado = num.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+      useGrouping: true,
+    });
+
+    setValue(formatado);
+  };
+
+
   return (
-    <ContainerInitCaixa>
-      <span>
-        <img src={cashRegisterImg} alt="w" />
-        <p> Inicie o caixa da empresa para continuar.</p>
+    showCaixa ?
+      <ContainerInitCaixa>
+        <span>
+          <img src={cashRegisterImg} alt="w" />
+          <p> Inicie o caixa da empresa para continuar.</p>
+          <input
+            type="text"
+            value={`R$ ${value}`}
+            onChange={handleChange}
+            placeholder="0,00"
+          />
 
-        <input
-          type="number"
-          onChange={(e) => setValue(Number(e.target.value))}
-        />
 
-        <button onClick={handleInitCaixa}>Iniciar</button>
-      </span>
-    </ContainerInitCaixa>
+          <button onClick={handleInitCaixa}>Iniciar</button>
+        </span>
+      </ContainerInitCaixa>
+      : ''
   );
 };
 

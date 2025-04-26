@@ -144,8 +144,8 @@ const RegistrationsP = (): React.ReactElement => {
         />
       )}
 
-      {!(
-        caixaStatesFromInfoGerais && caixaStatesFromInfoGerais.caixa.isModified
+      {(
+        caixaStatesFromInfoGerais && !caixaStatesFromInfoGerais.caixa.isModified
       ) && <InitCaixa />}
     </ContainerRegistrationsCS>
   );

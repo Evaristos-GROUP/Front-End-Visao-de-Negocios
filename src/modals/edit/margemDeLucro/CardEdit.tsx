@@ -5,9 +5,11 @@ import { CustomTsDispatch } from "../../../hooks/dispatch";
 import {
   deleteServico,
   updateServico,
+  getAllServico,
 } from "../../../slices/Relatorios/MargemDeLucroSL";
 import { FaCheck } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
+import { toast } from "react-toastify";
 
 interface CardProps {
   item: servicos;
@@ -17,20 +19,16 @@ interface CardProps {
 const CardEdit: React.FC<CardProps> = ({ item, onEdit }) => {
   const dispatch = CustomTsDispatch();
 
-  const [valorDeVenda, setValorDeVenda] = React.useState<number>(
-    item.valorVenda
-  );
+  const [valorDeVenda, setValorDeVenda] = React.useState<number>(item.valorVenda);
   const [insumos, setInsumos] = React.useState<number>(item.valorInsumos);
   const [custoMedico, setCustoMedico] = React.useState<number>(item.custoMed);
   const [imposto, setImposto] = React.useState<number>(item.imposto);
   const [check, setCheck] = React.useState<boolean>(false);
   const [date, setDate] = React.useState<string>("");
 
-  const [atendimentos, setAtendimentos] = React.useState<number>(
-    item.qtdPorMes
-  );
+  const [atendimentos, setAtendimentos] = React.useState<number>(item.qtdPorMes);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const newItem = {
@@ -43,16 +41,34 @@ const CardEdit: React.FC<CardProps> = ({ item, onEdit }) => {
       date: date,
     };
 
-    dispatch(updateServico(newItem));
+    await dispatch(updateServico(newItem));
+    toast.success("Procedimento atualizado com sucesso!");
+
+    // Recarrega a lista de serviços para atualizar tela sem F5
+    const currentDate = new Date();
+    const mesAtual = currentDate.getMonth() + 1;
+    const anoAtual = currentDate.getFullYear();
+    dispatch(getAllServico({ mes: mesAtual, ano: anoAtual }));
+
+    onEdit(); // Fecha o modal de edição
   };
 
-  const handleDelete = (id: string) => {
-    dispatch(deleteServico(Number(id)));
+  const handleDelete = async (id: string) => {
+    await dispatch(deleteServico(Number(id)));
+    toast.success("Procedimento excluído com sucesso!");
+
+    const currentDate = new Date();
+    const mesAtual = currentDate.getMonth() + 1;
+    const anoAtual = currentDate.getFullYear();
+    dispatch(getAllServico({ mes: mesAtual, ano: anoAtual }));
+
+    onEdit(); // Fecha o modal de edição
   };
 
   return (
     <Container onSubmit={handleSubmit}>
       <h2>{item.nomeProcedimento}</h2>
+
       <label>Valor de venda</label>
       <input
         type="number"
@@ -60,6 +76,7 @@ const CardEdit: React.FC<CardProps> = ({ item, onEdit }) => {
         value={valorDeVenda}
         onChange={(e) => setValorDeVenda(Number(e.target.value))}
       />
+
       <label>Insumos</label>
       <input
         type="number"
@@ -92,7 +109,6 @@ const CardEdit: React.FC<CardProps> = ({ item, onEdit }) => {
       />
 
       <label>Modificar todos os registros</label>
-
       <div className={`check ${check ? `active` : `disable`}`}>
         <FaCheck onClick={() => setCheck(!check)} />
         <input
