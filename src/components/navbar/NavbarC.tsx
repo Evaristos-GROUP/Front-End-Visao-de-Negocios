@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import { logout } from "../../slices/AuthSL";
 import { ContainerNavbarCS, BoxoptionsCS } from "./navbar.styled";
 import { FcSms, FcAssistant, FcSettings } from "react-icons/fc";
-import { IoMdArrowDropright } from "react-icons/io";
 import { toast } from "react-toastify";
 
 const NavbarC: React.FC = (): React.ReactElement => {
@@ -13,7 +12,7 @@ const NavbarC: React.FC = (): React.ReactElement => {
   const navigate = useNavigate();
 
   const userData = localStorage.getItem("user");
-  const [email, nome, funcao] = userData ? userData.split("|") : ["", "", ""];
+  const [email, nome] = userData ? userData.split("|") : ["", "", ""];
 
   const handleLogout = async () => {
     try {

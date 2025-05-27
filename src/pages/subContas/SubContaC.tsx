@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { FaPencilAlt, FaPlusSquare } from "react-icons/fa";
@@ -37,10 +37,14 @@ const SubContaC = () => {
 
   const itemsPerPage = 7;
 
+
+
   useEffect(() => {
     const month = new Date().toISOString().slice(0, 7);
     dispatch(getInfosGerais(month));
   }, [dispatch]);
+
+
 
   const subContasFromInfoGerais = useSelector(
     (state: RootState) => state.infosGeraisStore.infosGerais?.sub_contas || []
@@ -57,6 +61,8 @@ const SubContaC = () => {
     setIsEditing(isEdit);
     setShowModal(true);
     setSelectedSubContaIndex(index);
+    setTypeDespesa("")
+    setNewSubCont("");
   };
 
   const handleDeleteConfirmation = (index: number) => {
@@ -87,6 +93,7 @@ const SubContaC = () => {
     }
 
     if (isEditing && selectedSubContaIndex !== null) {
+      
       dispatch(
         updateSubConta({
           id: selectedSubContaIndex,
@@ -108,6 +115,7 @@ const SubContaC = () => {
           toast.success("Sub-conta adicionada com sucesso!");
           const month = new Date().toISOString().slice(0, 7);
           dispatch(getInfosGerais(month));
+          setTypeDespesa("")
         })
         .catch(() => {
           toast.error("Erro ao adicionar sub-conta.");
@@ -125,7 +133,7 @@ const SubContaC = () => {
         <div
           onClick={() => {
             openModal();
-            setNewSubCont("");
+            
           }}
           className="AddSubConta"
         >
@@ -211,13 +219,13 @@ const SubContaC = () => {
 
               {!isEditing ? <><label> Tipo da Despesa </label> <select
                 value={typeDespesa}
-                onChange={(e) => setTypeDespesa(e.target.value.toUpperCase())}
+                onChange={(e) => setTypeDespesa(e.target.value)}
               >
                 <option value="" disabled>
                   Selecione o tipo
                 </option>
-                <option value="fixa">Despesa Fixa</option>
-                <option value="variavel">Despesa Variável</option>
+                <option value="FIXA">Despesa Fixa</option>
+                <option value="VARIAVEL">Despesa Variável</option>
               </select> </> : null}
             </div>
 

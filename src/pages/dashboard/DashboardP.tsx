@@ -57,12 +57,23 @@ const DashboardP: React.FC = (): React.ReactElement => {
     recebiveis: lancamentoGenerico[];
   };
 
-  function ajustarDataParaLocal(dataStr: string) {
-    const date = new Date(dataStr);
-    date.setMinutes(date.getMinutes() + date.getTimezoneOffset()); // Ajuste para UTC puro
-    return date.toISOString().split("T")[0]; // Retorna "YYYY-MM-DD"
+  
+function ajustarDataParaLocal(dataStr: string): string | null {
+  try {
+    // Divide a string "YYYY-MM-DD" manualmente
+    const [year, month, day] = dataStr.split("-").map(Number);
+    if (!year || !month || !day || isNaN(year) || isNaN(month) || isNaN(day)) {
+      return null; // Retorna null se a data for inválida
+    }
+    // Formata o mês e o dia com dois dígitos
+    const formattedMonth = String(month).padStart(2, "0");
+    const formattedDay = String(day).padStart(2, "0");
+    return `${formattedMonth}-${formattedDay}`; // Retorna no formato "MM-DD"
+  } catch (error) {
+    console.error("Erro ao ajustar data:", error);
+    return null;
   }
-
+}
 
   
   const preencheDataLineChart = (dashboard: DashboardForStructs | undefined) => {
@@ -85,7 +96,7 @@ const DashboardP: React.FC = (): React.ReactElement => {
     );
   
     dias.forEach((dia) => {
-      const [year, month, day] = dia.split("-");
+      const [ month, day] = dia!.split("-");
   
       const valores = categorias.map((categoria) =>
         dashboard[categoria]
@@ -284,6 +295,7 @@ const DashboardP: React.FC = (): React.ReactElement => {
                     height={"100%"}
                     data={dataLineChart}
                     options={optionsLineChart}
+                     
                   />
       
                 </BoxDashboardChartsPS>

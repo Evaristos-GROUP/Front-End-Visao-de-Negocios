@@ -27,7 +27,6 @@ const CaixaC: React.FC<propsCaixaC> = (props: propsCaixaC): React.ReactElement =
                 <span>{props.info?.caixa.caixaTotal.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             </span>
             
-            {/* Corrigido para usar onChange no <select> */}
             <select value={selectedMonth} onChange={(e) => setSelectMonth(e.target.value)}> 
                 <option value="" disabled>Selecione o período</option>
                 {props.info?.mesesDisponiveis.map((mes, key) => (

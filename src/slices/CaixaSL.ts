@@ -10,7 +10,7 @@ const initialState: caixaStates = {
 
 export const patchInitCaixa = createAsyncThunk(
   "caixa/initCaixa",
-  async (caixaInicial: number, thunkAPI) => {
+  async (caixaInicial: number) => {
     const data = await caixaService.init(caixaInicial);
     return data;
   }

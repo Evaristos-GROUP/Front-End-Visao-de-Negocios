@@ -13,7 +13,7 @@ import ShowDescriptionM from "../../modals/showDescription/ShowDescriptionM";
 import AlertC from "../alert/AlertC";
 
 interface propsTable {
-  registrationType: string | null; 
+  registrationType: string | null;
   filterName: string;
 }
 
@@ -37,7 +37,7 @@ const TableC: React.FC<propsTable> = ({ registrationType, filterName }) => {
   };
 
   const data = dataMap[registrationType as keyof typeof dataMap] || [];
-  
+
   const filteredItems = data.filter((item) =>
     item.type.toLowerCase().includes(filterName.toLowerCase())
   );
@@ -54,7 +54,7 @@ const TableC: React.FC<propsTable> = ({ registrationType, filterName }) => {
     setCurrentPage(1);
   }, [filterName, registrationType]);
 
-  console.log(dataMap.RECEBIVEIS)
+  console.log(dataMap.RECEBIVEIS);
 
   return (
     <ContainerTableCS>
@@ -76,12 +76,18 @@ const TableC: React.FC<propsTable> = ({ registrationType, filterName }) => {
           {itemsToDisplay.length > 0 ? (
             itemsToDisplay.map((item, index) => (
               <tr key={index}>
-                <td>R$ {item.valor}</td>
+                <td>
+                  R$
+                  {item.valor.toLocaleString("pt-BR", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </td>
                 <td>
                   {registrationType === "DESPESAS" && "sub_conta" in item
                     ? item.sub_conta
                     : "fonte_de_arrecadacao" in item && (
-                          <span>{item.fonte_de_arrecadacao}</span>
+                        <span>{item.fonte_de_arrecadacao}</span>
                       )}
                 </td>
                 <td>{item.dataReferencia.toString()}</td>
@@ -138,7 +144,7 @@ const TableC: React.FC<propsTable> = ({ registrationType, filterName }) => {
 
       {showAlertDelete && selectedItem && (
         <AlertC
-          keyModel={registrationType || ''}
+          keyModel={registrationType || ""}
           option={2}
           item={selectedItem}
           showAlert={() => setShowAlertDelete(false)}

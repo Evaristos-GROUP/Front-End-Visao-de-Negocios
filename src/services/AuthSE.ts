@@ -18,12 +18,18 @@ class authService {
       );
 
       if (response.data.errors === false) {
-        const data = response.data.data[0] as unknown as authResponseLogin;
-        localStorage.setItem("clientToken", data.token);
-        localStorage.setItem(
-          "user",
-          `${data.user.email} | ${data.user.nome} | ${data.user.funcao}|`
-        );
+        let data;
+        const rawData = response.data.data as unknown[];
+
+        if (rawData.length > 0) {
+          data = rawData[0] as authResponseLogin;
+
+          localStorage.setItem("clientToken", data.token);
+          localStorage.setItem(
+            "user",
+            `${data.user.email} | ${data.user.nome} | ${data.user.funcao}|`
+          );
+        }
       }
 
       return response.data;

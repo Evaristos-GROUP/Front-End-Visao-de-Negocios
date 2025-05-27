@@ -61,7 +61,6 @@ export const updateAUser = createAsyncThunk(
     newUser: { id: string; nome: string; email: string; funcao: string },
     thunkAPI
   ) => {
-
     thunkAPI.dispatch(updateUSerList({ newUser: newUser }));
 
     const data = await UserSE.updateUser(newUser);
@@ -115,9 +114,7 @@ export const UserSL = createSlice({
       if (user) {
         user.isActive = !user.isActive;
       } else {
-        console.error(
-          "Erro: Não foi possível inativar o usuário."
-        );
+        console.error("Erro: Não foi possível inativar o usuário.");
       }
     },
   },
@@ -143,7 +140,7 @@ export const UserSL = createSlice({
         state.error_user = false;
         state.success_user = action.payload!.message;
         state.loading_user = false;
-        state.userList = action.payload!.data[0] as unknown as UsersList[];
+        state.userList = (action.payload!.data as unknown[])[0] as UsersList[];
       })
       .addCase(getAllUsers.rejected, (state, action) => {
         state.error_user = action.payload as string;

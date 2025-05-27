@@ -1,8 +1,6 @@
 import styled from "styled-components";
 
-interface propsDRE {
-  selectedINDEX: number;
-}
+
 
 export const ContainerDERPS = styled.div`
   display: flex;

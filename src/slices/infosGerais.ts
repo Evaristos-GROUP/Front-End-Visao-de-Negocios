@@ -12,12 +12,14 @@ const initialState: infosGeraisStates = {
 
 export const getInfosGerais = createAsyncThunk(
   "infosGerais/getInfosGerais",
-  async (param : string, thunkAPI) => {
+  async (param: string, thunkAPI) => {
     const data = await dashboardService.getDashboard(param);
     if (data.http_status_code !== 200) {
       return thunkAPI.rejectWithValue(data.message);
     } else if (data.http_status_code === 200) {
-      return thunkAPI.fulfillWithValue(data.data[0] as unknown as informacoesGeraisParaOFrontModel);
+      return thunkAPI.fulfillWithValue(
+        (data.data as unknown[])[0] as informacoesGeraisParaOFrontModel
+      );
     }
   }
 );
@@ -26,38 +28,36 @@ export const infosGeraisSlice = createSlice({
   name: "infosGerais",
   initialState,
   reducers: {
-
-
     addValueList: (state, action) => {
       const { type, value } = action.payload;
 
       if (type === "subConta" && value) {
         state.infosGerais!.sub_contas.push(value);
-     } else if (type === "fonteDeArrecadacao" && value) {
+      } else if (type === "fonteDeArrecadacao" && value) {
         state.infosGerais!.fonte_arrecadacoes.push(value);
       } else {
         console.error("Erro: Tipo ou valor inválido.");
       }
     },
 
-
-
     updateValueList: (state, action) => {
       const { type, id, value } = action.payload;
 
-      console.log(action.payload)
+      console.log(action.payload);
 
       if (type === "subConta" && id !== undefined && value) {
-
-        state.infosGerais!.sub_contas = state.infosGerais!.sub_contas.map((item, index) =>
-          index === id ? value : item
+        state.infosGerais!.sub_contas = state.infosGerais!.sub_contas.map(
+          (item, index) => (index === id ? value : item)
         );
-     } else if (type === "fonteDeArrecadacao" && id !== undefined && value) {
-        state.infosGerais!.fonte_arrecadacoes = state.infosGerais!.fonte_arrecadacoes.map((item, index) =>
-          index === id ? value : item
-        );
+      } else if (type === "fonteDeArrecadacao" && id !== undefined && value) {
+        state.infosGerais!.fonte_arrecadacoes =
+          state.infosGerais!.fonte_arrecadacoes.map((item, index) =>
+            index === id ? value : item
+          );
       } else {
-        console.error("Erro: Não foi possível atualizar. Payload incompleto ou inválido.");
+        console.error(
+          "Erro: Não foi possível atualizar. Payload incompleto ou inválido."
+        );
       }
     },
 
@@ -65,11 +65,18 @@ export const infosGeraisSlice = createSlice({
       const { type, id } = action.payload;
 
       if (type === "subConta" && id !== undefined) {
-        state.infosGerais!.sub_contas = state.infosGerais!.sub_contas.filter((_, index) => index !== id);
-     } else if (type === "fonteDeArrecadacao" && id !== undefined) {
-        state.infosGerais!.fonte_arrecadacoes = state.infosGerais!.fonte_arrecadacoes.filter((_, index) => index !== id);
+        state.infosGerais!.sub_contas = state.infosGerais!.sub_contas.filter(
+          (_, index) => index !== id
+        );
+      } else if (type === "fonteDeArrecadacao" && id !== undefined) {
+        state.infosGerais!.fonte_arrecadacoes =
+          state.infosGerais!.fonte_arrecadacoes.filter(
+            (_, index) => index !== id
+          );
       } else {
-        console.error("Erro: Não foi possível excluir. Índice ou tipo inválido.");
+        console.error(
+          "Erro: Não foi possível excluir. Índice ou tipo inválido."
+        );
       }
     },
 
@@ -84,7 +91,6 @@ export const infosGeraisSlice = createSlice({
         console.error("Erro: Tipo ou lista inválida.");
       }
     },
-
   },
 
   extraReducers: (builder) => {
@@ -103,9 +109,9 @@ export const infosGeraisSlice = createSlice({
       state.loading_infoGerais = false;
       state.success_infoGerais = true;
       state.infosGerais = action.payload;
-
     });
   },
 });
-export const { addValueList, updateValueList, deleteValueList, setValuesList } = infosGeraisSlice.actions;
+export const { addValueList, updateValueList, deleteValueList, setValuesList } =
+  infosGeraisSlice.actions;
 export default infosGeraisSlice.reducer;

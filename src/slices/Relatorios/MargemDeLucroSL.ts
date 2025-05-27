@@ -22,7 +22,7 @@ export const getAllServico = createAsyncThunk(
       return thunkAPI.rejectWithValue(response.message);
     }
 
-    return response.data[0] as MargemDeLucroModel;
+    return (response.data as unknown[])[0] as MargemDeLucroModel;
   }
 );
 
@@ -96,7 +96,7 @@ export const MargemDeLucroSL = createSlice({
       .addCase(newServico.pending, (state) => {
         state.loading_MargemDeLucro = true;
       })
-      .addCase(newServico.fulfilled, (state, action) => {
+      .addCase(newServico.fulfilled, (state) => {
         state.loading_MargemDeLucro = false;
         state.success_MargemDeLucro = true;
         state.error_MargemDeLucro = "";

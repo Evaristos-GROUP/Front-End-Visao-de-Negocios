@@ -11,7 +11,6 @@ import { login } from "../../../slices/AuthSL";
 import { CustomTsDispatch } from "../../../hooks/dispatch";
 import { BoxLogin, ContainerLogin } from "./auth.styled";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 const AuthP = () => {
   const [email, setEmail] = useState("");

@@ -9,9 +9,6 @@ import { Dispatch } from "@reduxjs/toolkit";
 import { normalizeFonteDeArrecadacao, normalizeSubConta } from "./normalizer";
 import { RootState } from "../store";
 
-
-
-
 export const importarPlanilhaRedux = async (
   file: File,
   dispatch: Dispatch,
@@ -21,10 +18,19 @@ export const importarPlanilhaRedux = async (
     const data = await file.arrayBuffer();
     const workbook = XLSX.read(data, { type: "array" });
 
+    function formatValor(valor: string | number): string {
+      const [inteiro, decimal = ""] = String(valor).split(".");
+      const decimalTruncado = decimal.substring(0, 2).padEnd(2, "0");
+      return `${inteiro}.${decimalTruncado}`;
+    }
+
     const state = getState();
-    const subContasCadastradas = state.infosGeraisStore.infosGerais!.sub_contas.map(
-      (subConta) => subConta.nome
-    ); const fontesCadastradas = state.infosGeraisStore.infosGerais!.fonte_arrecadacoes;
+    const subContasCadastradas =
+      state.infosGeraisStore.infosGerais!.sub_contas.map(
+        (subConta) => subConta.nome
+      );
+    const fontesCadastradas =
+      state.infosGeraisStore.infosGerais!.fonte_arrecadacoes;
 
     const processarAba = (sheetName: string, sheet: XLSX.WorkSheet) => {
       const rows = XLSX.utils.sheet_to_json(sheet);
@@ -35,48 +41,51 @@ export const importarPlanilhaRedux = async (
             return rows.map((row: any, index) => ({
               id: index,
               type: "RECEBIVEIS",
-              valor: parseFloat(row.Valor) || 0,
+              valor: formatValor(row.Valor) || 0,
               fonte_de_arrecadacao: normalizeFonteDeArrecadacao(
                 row["Fonte de Arrecadação"],
                 fontesCadastradas
               ),
               descricao: row.Descrição || "",
               dataReferencia: row.Data
-                ? new Date((row.Data - 25569) * 86400000 + 12 * 3600000).toLocaleDateString("pt-BR")
-                : new Date().toLocaleDateString("pt-BR")
-
+                ? new Date(
+                    (row.Data - 25569) * 86400000 + 12 * 3600000
+                  ).toLocaleDateString("pt-BR")
+                : new Date().toLocaleDateString("pt-BR"),
             }));
 
           case "DESPESAS":
             return rows.map((row: any, index) => ({
               id: index,
               type: "DESPESAS",
-              valor: parseFloat(row.Valor) || 0,
+              valor: formatValor(row.Valor) || 0,
               sub_conta: normalizeSubConta(
                 row["Sub-Conta"],
                 subContasCadastradas
               ),
               descricao: row.Descrição || "",
               dataReferencia: row.Data
-                ? new Date((row.Data - 25569) * 86400000 + 12 * 3600000).toLocaleDateString("pt-BR")
-                : new Date().toLocaleDateString("pt-BR")
-
+                ? new Date(
+                    (row.Data - 25569) * 86400000 + 12 * 3600000
+                  ).toLocaleDateString("pt-BR")
+                : new Date().toLocaleDateString("pt-BR"),
             }));
 
           case "VENDAS":
             return rows.map((row: any, index) => ({
               id: index,
               type: "VENDAS",
-              valor: parseFloat(row.Valor) || 0,
+              valor: formatValor(row.Valor) || 0,
               fonte_de_arrecadacao: normalizeFonteDeArrecadacao(
                 row["Fonte de Arrecadação"],
                 fontesCadastradas
               ),
               descricao: row.Descrição || "",
               dataReferencia: row.Data
-                ? new Date((row.Data - 25569) * 86400000 + 12 * 3600000).toLocaleDateString("pt-BR")
-                : new Date().toLocaleDateString("pt-BR")
-
+                ? new Date(
+                    (row.Data - 25569) * 86400000 + 12 * 3600000
+                  ).toLocaleDateString("pt-BR")
+                : new Date().toLocaleDateString("pt-BR"),
             }));
 
           default:
@@ -89,7 +98,10 @@ export const importarPlanilhaRedux = async (
       }
     };
 
-    const recebiveis = processarAba("RECEBIVEIS", workbook.Sheets["RECEBIVEIS"]);
+    const recebiveis = processarAba(
+      "RECEBIVEIS",
+      workbook.Sheets["RECEBIVEIS"]
+    );
     const despesas = processarAba("DESPESAS", workbook.Sheets["DESPESAS"]);
     const vendas = processarAba("VENDAS", workbook.Sheets["VENDAS"]);
 

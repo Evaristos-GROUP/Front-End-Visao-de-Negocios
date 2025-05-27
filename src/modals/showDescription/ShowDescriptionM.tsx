@@ -45,9 +45,6 @@ const ShowDescriptionM: React.FC<Props> = ({ item, showModal }) => {
       updatedItem.sub_conta = normalizeSubConta(subConta, stateInfoGerais.infosGerais!.sub_contas);
     }
 
-    updatedItem.recebivel = updatedItem.recebivel ;
-    updatedItem.despesa = updatedItem.despesa ;
-    updatedItem.venda = updatedItem.venda ;
 
     updatedItem.valor = value;
     updatedItem.descricao = description;
