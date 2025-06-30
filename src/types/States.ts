@@ -7,6 +7,7 @@ import {
 import { UsersList } from "./models/userMO";
 import { DreModel } from "./models/Relatorios/DREMO";
 import { MargemDeLucroModel } from "./models/Relatorios/MargemDeLucroMO";
+import { aporteRetiradaMO } from "./models/aporteRetirada";
 
 export interface vendasStates {
   vendas: vendasModel[];
@@ -30,7 +31,7 @@ export interface despesasStates {
 }
 
 export interface MargemDeLucroStates {
-  MargemDeLucro: MargemDeLucroModel | null; 
+  MargemDeLucro: MargemDeLucroModel | null;
   error_MargemDeLucro: boolean | string;
   success_MargemDeLucro: boolean | string;
   loading_MargemDeLucro: boolean;
@@ -78,9 +79,16 @@ export interface DreStates {
   loading_Dre: boolean;
 }
 
-
 export interface caixaStates {
-  success_caixa: boolean,
-  error_caixa: boolean,
-  loading_caixa: boolean,
+  success_caixa: boolean;
+  error_caixa: boolean;
+  loading_caixa: boolean;
+}
+
+export interface aporteRetiradaStates {
+  aporteRetiradaMO: aporteRetiradaMO | null;
+  list_aporteRetirada: aporteRetiradaMO[];
+  success_aporteRetirada: boolean | string;
+  error_aporteRetirada: boolean | string;
+  loading_aporteRetirada: boolean;
 }

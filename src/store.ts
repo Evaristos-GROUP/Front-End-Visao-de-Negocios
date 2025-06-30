@@ -9,6 +9,7 @@ import FonteArrecadacaoSL from "./slices/FonteArrecadacaoSL";
 import DRESL from "./slices/Relatorios/DRESL";
 import MargemDeLucroSL from "./slices/Relatorios/MargemDeLucroSL";
 import CaixaSlice from "./slices/CaixaSL";
+import  AporteRetiradaSL  from "./slices/AporteRetirada";
 
 export const store = configureStore({
   reducer: {
@@ -21,6 +22,7 @@ export const store = configureStore({
     DRESTore: DRESL,
     MargemDeLucroStore: MargemDeLucroSL,
     CaixaStore: CaixaSlice,
+    aporteRetiradaStore : AporteRetiradaSL
   },
 });
 

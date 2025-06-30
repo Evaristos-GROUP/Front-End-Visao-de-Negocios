@@ -16,13 +16,17 @@ import DREP from "./pages/relatorios/dre/DREP";
 import ForgotP from "./pages/Auth/forgot/Forgot";
 import EmailEnviado from "./pages/Auth/Email-enviado/emailEnviadoP";
 import MargemDeLucro from "./pages/relatorios/margemDeLucro/margemDeLucro";
+import MovimentacaoFinanceiraP from "./pages/movimentacaoFinanceira/MovimentacaoFinanceiro";
 
 
 const AppRoutes: React.FC = (): JSX.Element => {
   const authStates = Redux.useSelector((state: RootState) => state.authStore);
   return (
     <>
-      {authStates.auth ? <NavbarC /> : null}
+
+
+
+ {authStates.auth ? <NavbarC /> : null}
       {authStates.auth ? <SidebarC /> : null}
       <Routes>
         <Route
@@ -57,16 +61,26 @@ const AppRoutes: React.FC = (): JSX.Element => {
           element={authStates.auth ? <MargemDeLucro /> : <AuthP />}
         />
 
+           <Route
+          path="/relatorios/retiradas-aportes"
+          element={authStates.auth ? <MovimentacaoFinanceiraP /> : <AuthP />}
+        />
+
         <Route
           path="/auth/forgot-password"
           element={!authStates.auth ? <ForgotP /> : <AuthP />}
         />
+
+     
            
         <Route path="/email-enviado" element={<EmailEnviado />} />
 
       </Routes>
+      
     </>
+    
   );
+  
 };
 
 export default AppRoutes;

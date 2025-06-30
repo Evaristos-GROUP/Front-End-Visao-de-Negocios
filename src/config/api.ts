@@ -1,7 +1,6 @@
 import axios from "axios";
 export const BASE_URL = "https://visaodenegocios.zyx/";
 
-
 const axiosInstance = axios.create({
   baseURL: BASE_URL, 
   headers: {

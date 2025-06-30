@@ -59,7 +59,7 @@ const SidebarC: React.FC = (): React.ReactElement => {
             ...(userPermission === "SOCIO" || userPermission === "ADMIN"
               ? [
                   {
-                    url: "/relatorios/retiradas-aporte",
+                    url: "/relatorios/retiradas-aportes",
                     value: "Retiradas x Aporte",
                   },
                 ]
